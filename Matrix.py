@@ -55,6 +55,8 @@ def toFloatP(length, inp):
 class Matrix:
     def __init__(this, size, dat):
         if dat == None: #Must be just a pointer
+            if not size:
+                raise Exception("Null pointer: Produced by invalid process")
             this.pointer = size
         elif type(dat) == list and type(size) == tuple:
             length = size[0] * size[1]
@@ -97,7 +99,7 @@ class Matrix:
             return Matrix(funcs["mult"](this.pointer, that.pointer), None)
         elif not type(that) in [int, float, complex]:
             raise Exception("Invalid type")
-        return Matrix(funcs["scal"](this.pointer, that), None)
+        return Matrix(funcs["sca"](this.pointer, that), None)
 
 
     def __neg__(this):

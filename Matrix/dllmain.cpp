@@ -5,37 +5,66 @@
 
 MAT_API Matrix* newMat(Size size, double value, bool random) {
 	Matrix* out = new Matrix();
+
 	out->size = size;
 	int j = size.height * size.width;
 	out->dat = new double[j];
+
 	for (int i = 0; i < j; i++) {
 		out->dat[i] = value;
 	}
+
 	return out;
 }
 
 MAT_API Matrix* generate(Size size, double* a) {
 	Matrix* out = new Matrix();
-	int j = size.height * size.width;
+	
 	out->size = size;
-	out->dat = new double[j];
+	int j = size.height * size.width;
+	double* newDat = new double[j];
+
 	for (int i = 0; i < j; i++) {
-		out->dat[i] = a[i];
+		newDat[i] = a[i];
 	}
+	out->dat = newDat;
+
 	return out;
 }
 
 
 MAT_API Matrix* mult(Matrix* a, Matrix* b) {
-	return nullptr;
+	return nullptr; // TODO : do
 }
 
 MAT_API Matrix* add(Matrix* a, Matrix* b) {
-	return nullptr;
+	if (a->size.height != b->size.height || a->size.width != b->size.width) {
+		return nullptr;
+	}
+
+	int j = a->size.height * a->size.width;
+	double* newDat = new double[j];
+
+	for (int i = 0; i < j; i++) {
+		newDat[i] = a->dat[i] + b->dat[i];
+	}
+
+	return generate(a->size,newDat);
 }
 
 MAT_API Matrix* sub(Matrix* a, Matrix* b) {
-	return nullptr;
+	if (a->size.height != b->size.height || a->size.width != b->size.width) {
+		return nullptr;
+	}
+
+	int j = a->size.height * a->size.width;
+	double* newDat = new double[j];
+
+	for (int i = 0; i < j; i++) {
+		newDat[i] = a->dat[i] - b->dat[i];
+	}
+
+	return generate(a->size, newDat);
 }
 
 MAT_API double getValue(Matrix* a, uint b, uint c) {
@@ -44,7 +73,19 @@ MAT_API double getValue(Matrix* a, uint b, uint c) {
 }
 
 MAT_API bool equ(Matrix* a, Matrix* b) {
-	return false;
+	if (a->size.height != b->size.height || a->size.width != b->size.width) {
+		return false;
+	}
+
+	int j = a->size.height * a->size.width;
+
+	for (int i = 0; i < j; i++) {
+		if (a->dat[i] != b->dat[i]) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 MAT_API bool del(Matrix* a) {
@@ -58,11 +99,24 @@ MAT_API bool del(Matrix* a) {
 }
 
 MAT_API Matrix* neg(Matrix* a) {
-	return nullptr;
+	int j = a->size.height * a->size.width;
+	double* newDat = new double[j];
+
+	for (int i = 0; i < j; i++) {
+		newDat[i] = a->dat[i] * -1;
+	}
+	return generate(a->size, newDat);
 }
 
 MAT_API Matrix* sca(Matrix* a, double v) {
-	return nullptr;
+	int j = a->size.height * a->size.width;
+	double* newDat = new double[j];
+
+	for (int i = 0; i < j; i++) {
+		newDat[i] = a->dat[i] * v;
+	}
+
+	return generate(a->size, newDat);
 }
 
 MAT_API Size getSize(Matrix* a) {
