@@ -8,7 +8,6 @@ Primarily created to produce Matrix.dll to create faster python matrix calculati
 */
 #include "pch.h"
 #include "Matrix.h"
-#include <array>
 
 MAT_API Matrix* newMat(Size size, double value, bool random) {
 	Matrix* out = new Matrix();
@@ -30,6 +29,8 @@ MAT_API Matrix* generate(Size size, double* a) {
 	out->size = size;
 	int j = size.height * size.width;
 	double* newDat = new double[j];
+	//Using newDat is necessary for when python calls this func
+	//Otherwise out->dat = a could be used
 
 	for (int i = 0; i < j; i++) {
 		newDat[i] = a[i];

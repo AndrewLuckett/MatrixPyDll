@@ -7,8 +7,6 @@ Header file to outline functions and types for dllmain.cpp
 
 #pragma once
 
-#include <vector>
-
 #ifdef TRUE //MATHLIBRARY_EXPORTS
 	#define MAT_API __declspec(dllexport)
 #else
