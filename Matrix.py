@@ -5,6 +5,7 @@ import pathlib
 path = str(pathlib.Path().absolute())
 clib = ctypes.CDLL(path+"/Matrix.dll")
 
+
 #TYPES
 c_int = ctypes.c_int
 c_point = ctypes.c_void_p
@@ -16,9 +17,6 @@ class Size(ctypes.Structure):
     def __repr__(this):
         return "Size(" + str(this.height) + ", " + str(this.width) + ")"
 
-def toFloatP(length, inp):
-    fa = (c_float * length)(*inp)
-    return ctypes.pointer(fa)
 
 #Params
 res = [c_point, c_int, Size, c_float, c_bool]
@@ -39,30 +37,83 @@ for k,v in funcs.items():
     p = ctypes.WINFUNCTYPE(fres,*fargs)
     funcs[k] = p((k,clib))
 
+
 #Cleanup
 del path, clib, c_int, c_point, c_bool
 del res, args, k, v, fres, fargs, p
-del pathlib
-#Keeping c_float and ctypes for toFloatP func
+toPointer = ctypes.pointer
+del pathlib, ctypes
+#Keeping c_float and ctypes.pointer for toFloatP func
+
+
+#Util
+def toFloatP(length, inp):
+    fa = (c_float * length)(*inp)
+    return toPointer(fa)
+
 
 class Matrix:
     def __init__(this, size, dat):
-        if type(dat) == list:
+        if dat == None: #Must be just a pointer
+            this.pointer = size
+        elif type(dat) == list and type(size) == tuple:
             length = size[0] * size[1]
             this.pointer = funcs["generate"](Size(size[0], size[1]), toFloatP(length, dat))
-        else:
+        elif type(size) == tuple:
             this.pointer = funcs["newMat"](Size(size[0], size[1]), dat, False)
+        else:
+            raise Exception("eek")
         
 
     def getValue(this, *pos):
         return funcs["getValue"](this.pointer, pos[0], pos[1])
 
+
     def getSize(this):
         siz = funcs["getSize"](this.pointer)
         return siz.height, siz.width
 
+
+    def __eq__(this,that):
+        if type(that) != Matrix:
+            return False
+        return funcs["equ"](this.pointer, that.pointer)
+
+
+    def __add__(this,that):
+        if type(that) != Matrix:
+            raise Exception("Invalid type")
+        return Matrix(funcs["add"](this.pointer, that.pointer), None)
+
+
+    def __sub__(this,that):
+        if type(that) != Matrix:
+            raise Exception("Invalid type")
+        return Matrix(funcs["sub"](this.pointer, that.pointer), None)
+
+
+    def __mul__(this,that):
+        if type(that) == Matrix:
+            return Matrix(funcs["mult"](this.pointer, that.pointer), None)
+        elif not type(that) in [int, float, complex]:
+            raise Exception("Invalid type")
+        return Matrix(funcs["scal"](this.pointer, that), None)
+
+
+    def __neg__(this):
+        return Matrix(funcs["neg"](this.pointer), None)
+
+
+    def __pos__(this):
+        return this #Dont gen new or python will prematurely delete data
+
+
     def __del__(this):
         funcs["del"](this.pointer)
+
+
+    def __repr__(this):
+        return "Matrix" + str(this.getSize())
 
 
     
