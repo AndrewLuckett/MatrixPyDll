@@ -1,5 +1,17 @@
+"""
+Author: Andrew Luckett
+License: CC-BY
+Module name: Matrix
+
+This module loads the Matrix.dll library and binds the functions to produce a matrix class.
+The matrix class is fully immutable to produce a thread safe and logical implementation
+
+This module requires that Matrix.dll be located in the same file path as it.
+"""
+
 import ctypes
 import pathlib
+
 
 #Load lib
 path = str(pathlib.Path().absolute())

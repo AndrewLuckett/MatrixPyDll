@@ -1,3 +1,10 @@
+/*
+Author: Andrew Luckett
+License: CC-BY
+
+Header file to outline functions and types for dllmain.cpp
+*/
+
 #pragma once
 
 #include <vector>

@@ -1,4 +1,11 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
+/*
+Author: Andrew Luckett
+License: CC-BY
+
+This file includes a series of functions to enable matrix based mathematics.
+Potentially reusable in other C code works.
+Primarily created to produce Matrix.dll to create faster python matrix calculations.
+*/
 #include "pch.h"
 #include "Matrix.h"
 #include <array>
