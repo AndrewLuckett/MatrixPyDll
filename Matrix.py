@@ -11,6 +11,7 @@ c_int = ctypes.c_int
 c_point = ctypes.c_void_p
 c_float = ctypes.c_double
 c_bool = ctypes.c_bool
+
 class Size(ctypes.Structure):
     _fields_ = [("height", c_int), ("width", c_int)]
 
@@ -20,22 +21,22 @@ class Size(ctypes.Structure):
 
 #Params
 res = [c_point, c_int, Size, c_float, c_bool]
-args = [[Size, c_float, c_int], [c_point, c_point],
-        [c_point], [c_point, c_float], [c_point, c_int, c_int], [Size, c_point]]
+args = [[Size, c_float, c_int], [c_point, c_point], [c_point],
+        [c_point, c_float], [c_point, c_int, c_int], [Size, c_point]]
 
 
 #Pre formed func defs
 #Format name : (res, args)
-funcs = {"newMat":(0,0),"mult":(0,1),"add":(0,1),"sub":(0,1),"equ":(4,1),"del":(4,2),
-         "neg":(0,2),"sca":(0,3),"getSize":(2,2),"getValue":(3,4),"generate":(0,5)}
+funcs = {"newMat":(0,0), "mult":(0,1), "add":(0,1), "sub":(0,1), "equ":(4,1), "del":(4,2),
+         "sca":(0,3), "getSize":(2,2), "getValue":(3,4), "generate":(0,5)}
 
 
 #Define funcs
 for k,v in funcs.items():
     fres = res[v[0]]
     fargs = args[v[1]]
-    p = ctypes.WINFUNCTYPE(fres,*fargs)
-    funcs[k] = p((k,clib))
+    p = ctypes.WINFUNCTYPE(fres, *fargs)
+    funcs[k] = p((k, clib))
 
 
 #Cleanup
@@ -53,7 +54,7 @@ def toFloatP(length, inp):
 
 
 class Matrix:
-    def __init__(this, size, dat):
+    def __init__(this, size, dat = None):
         if dat == None: #Must be just a pointer
             if not size:
                 raise Exception("Null pointer: Produced by invalid process")
@@ -76,34 +77,34 @@ class Matrix:
         return siz.height, siz.width
 
 
-    def __eq__(this,that):
+    def __eq__(this, that):
         if type(that) != Matrix:
             return False
         return funcs["equ"](this.pointer, that.pointer)
 
 
-    def __add__(this,that):
+    def __add__(this, that):
         if type(that) != Matrix:
             raise Exception("Invalid type")
-        return Matrix(funcs["add"](this.pointer, that.pointer), None)
+        return Matrix(funcs["add"](this.pointer, that.pointer))
 
 
-    def __sub__(this,that):
+    def __sub__(this, that):
         if type(that) != Matrix:
             raise Exception("Invalid type")
-        return Matrix(funcs["sub"](this.pointer, that.pointer), None)
+        return Matrix(funcs["sub"](this.pointer, that.pointer))
 
 
-    def __mul__(this,that):
+    def __mul__(this, that):
         if type(that) == Matrix:
-            return Matrix(funcs["mult"](this.pointer, that.pointer), None)
+            return Matrix(funcs["mult"](this.pointer, that.pointer))
         elif not type(that) in [int, float, complex]:
             raise Exception("Invalid type")
-        return Matrix(funcs["sca"](this.pointer, that), None)
+        return Matrix(funcs["sca"](this.pointer, that))
 
 
     def __neg__(this):
-        return Matrix(funcs["neg"](this.pointer), None)
+        return Matrix(funcs["sca"](this.pointer, -1))
 
 
     def __pos__(this):

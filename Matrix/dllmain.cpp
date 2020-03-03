@@ -98,16 +98,6 @@ MAT_API bool del(Matrix* a) {
 	}
 }
 
-MAT_API Matrix* neg(Matrix* a) {
-	int j = a->size.height * a->size.width;
-	double* newDat = new double[j];
-
-	for (int i = 0; i < j; i++) {
-		newDat[i] = a->dat[i] * -1;
-	}
-	return generate(a->size, newDat);
-}
-
 MAT_API Matrix* sca(Matrix* a, double v) {
 	int j = a->size.height * a->size.width;
 	double* newDat = new double[j];

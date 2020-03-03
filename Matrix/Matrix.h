@@ -30,7 +30,6 @@ extern "C" MAT_API Matrix* sub(Matrix* a, Matrix* b);
 extern "C" MAT_API bool equ(Matrix* a, Matrix* b);
 extern "C" MAT_API bool del(Matrix* a);
 
-extern "C" MAT_API Matrix* neg(Matrix* a);
 extern "C" MAT_API Matrix* sca(Matrix* a, double v); //Scalar mult
 
 extern "C" MAT_API Size getSize(Matrix* a);
