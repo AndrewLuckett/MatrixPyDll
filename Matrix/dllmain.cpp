@@ -8,6 +8,7 @@ Primarily created to produce Matrix.dll to create faster python matrix calculati
 */
 #include "pch.h"
 #include "Matrix.h"
+#include "MatMult.h"
 
 MAT_API Matrix* newMat(Size size, double value, bool random) {
 	Matrix* out = new Matrix();
@@ -42,7 +43,7 @@ MAT_API Matrix* generate(Size size, double* a) {
 
 
 MAT_API Matrix* mult(Matrix* a, Matrix* b) {
-	return nullptr; // TODO : do
+	return MatrixMult::multiply(a, b);
 }
 
 MAT_API Matrix* add(Matrix* a, Matrix* b) {

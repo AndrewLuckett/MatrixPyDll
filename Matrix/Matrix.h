@@ -13,17 +13,7 @@ Header file to outline functions and types for dllmain.cpp
 	#define MAT_API __declspec(dllimport)
 #endif
 
-typedef unsigned int uint;
-
-struct Size {
-	uint height;
-	uint width;
-};
-
-struct Matrix {
-	Size size;
-	double* dat;
-};
+#include "MatDat.h"
 
 extern "C" MAT_API Matrix * newMat(Size size, double value, bool random);
 extern "C" MAT_API Matrix * generate(Size size, double* a);
