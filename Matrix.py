@@ -3,8 +3,10 @@ Author: Andrew Luckett
 License: CC-BY
 Module name: Matrix
 
-This module loads the Matrix.dll library and binds the functions to produce a matrix class.
-The matrix class is fully immutable to produce a thread safe and logical implementation
+This module loads the Matrix.dll library and binds the functions to produce a
+matrix class.
+The matrix class is fully immutable to produce a thread safe and logical
+implementation
 
 This module requires that Matrix.dll be located in the same file path as it.
 """
@@ -33,18 +35,20 @@ class Size(ctypes.Structure):
 
 #Params
 res = [c_point, c_int, Size, c_float, c_bool]
-args = [[Size, c_float, c_int], [c_point, c_point], [c_point],
-        [c_point, c_float], [c_point, c_int, c_int], [Size, c_point]]
+args = [[Size, c_float, c_int], [c_point, c_point],
+        [c_point], [c_point, c_float],
+        [c_point, c_int, c_int], [Size, c_point]]
 
 
 #Pre formed func defs
 #Format name : (res, args)
-funcs = {"newMat":(0,0), "mult":(0,1), "add":(0,1), "sub":(0,1), "equ":(4,1), "del":(4,2),
-         "sca":(0,3), "getSize":(2,2), "getValue":(3,4), "generate":(0,5)}
+funcs = {"newMat":(0, 0), "mult":(0, 1), "add":(0, 1), "sub":(0, 1),
+         "equ":(4, 1), "del":(4, 2), "sca":(0, 3), "getSize":(2, 2),
+         "getValue":(3, 4), "generate":(0, 5)}
 
 
 #Define funcs
-for k,v in funcs.items():
+for k, v in funcs.items():
     fres = res[v[0]]
     fargs = args[v[1]]
     p = ctypes.WINFUNCTYPE(fres, *fargs)
@@ -59,12 +63,6 @@ del pathlib, ctypes
 #Keeping c_float and ctypes.pointer for toFloatP func
 
 
-#Util
-def toFloatP(length, inp):
-    fa = (c_float * length)(*inp)
-    return toPointer(fa)
-
-
 class Matrix:
     def __init__(this, size, dat = None):
         if dat == None: #Must be just a pointer
@@ -73,12 +71,19 @@ class Matrix:
             this.pointer = size
         elif type(dat) == list and type(size) == tuple:
             length = size[0] * size[1]
-            this.pointer = funcs["generate"](Size(size[0], size[1]), toFloatP(length, dat))
+            size = Size(size[0], size[1])
+            this.pointer = funcs["generate"](size, this.toFloatP(length, dat))
         elif type(size) == tuple:
             this.pointer = funcs["newMat"](Size(size[0], size[1]), dat, False)
         else:
             raise Exception("eek")
-        
+
+
+    @classmethod
+    def toFloatP(this, length, inp):
+        fa = (c_float * length)(*inp)
+        return toPointer(fa)    
+
 
     def getValue(this, *pos):
         return funcs["getValue"](this.pointer, pos[0], pos[1])
