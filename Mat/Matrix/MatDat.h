@@ -7,7 +7,7 @@ Header file to outline Matrix data type
 
 #pragma once
 
-typedef unsigned int uint;
+typedef unsigned long uint;
 
 struct Size {
 	uint height;

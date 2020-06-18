@@ -14,17 +14,17 @@ MAT_API Matrix* newMat(Size size, double value, bool random) {
 	Matrix* out = new Matrix();
 
 	out->size = size;
-	int j = size.height * size.width;
+	uint j = size.height * size.width;
 	out->dat = new double[j];
 
-	for (int i = 0; i < j; i++) {
+	for (uint i = 0; i < j; i++) {
 		out->dat[i] = value;
 	}
 
 	return out;
 }
 
-MAT_API Matrix* generate(Size size, double* a) {
+MAT_API Matrix* generate(Size size, double* a) { //python only version
 	Matrix* out = new Matrix();
 	
 	out->size = size;
@@ -37,6 +37,14 @@ MAT_API Matrix* generate(Size size, double* a) {
 		newDat[i] = a[i];
 	}
 	out->dat = newDat;
+	
+	return out;
+}
+
+Matrix* intGenerate(Size size, double* a) { //python only version
+	Matrix* out = new Matrix();
+	out->size = size;
+	out->dat = a;
 
 	return out;
 }
@@ -51,14 +59,14 @@ MAT_API Matrix* add(Matrix* a, Matrix* b) {
 		return nullptr;
 	}
 
-	int j = a->size.height * a->size.width;
+	uint j = a->size.height * a->size.width;
 	double* newDat = new double[j];
 
-	for (int i = 0; i < j; i++) {
+	for (uint i = 0; i < j; i++) {
 		newDat[i] = a->dat[i] + b->dat[i];
 	}
 
-	return generate(a->size,newDat);
+	return intGenerate(a->size,newDat);
 }
 
 MAT_API Matrix* sub(Matrix* a, Matrix* b) {
@@ -66,18 +74,18 @@ MAT_API Matrix* sub(Matrix* a, Matrix* b) {
 		return nullptr;
 	}
 
-	int j = a->size.height * a->size.width;
+	uint j = a->size.height * a->size.width;
 	double* newDat = new double[j];
 
-	for (int i = 0; i < j; i++) {
+	for (uint i = 0; i < j; i++) {
 		newDat[i] = a->dat[i] - b->dat[i];
 	}
 
-	return generate(a->size, newDat);
+	return intGenerate(a->size, newDat);
 }
 
 MAT_API double getValue(Matrix* a, uint b, uint c) {
-	int ind = (b - 1) * a->size.width + c - 1;
+	uint ind = (b - 1) * a->size.width + c - 1;
 	return a->dat[ind];
 }
 
@@ -86,9 +94,9 @@ MAT_API bool equ(Matrix* a, Matrix* b) {
 		return false;
 	}
 
-	int j = a->size.height * a->size.width;
+	uint j = a->size.height * a->size.width;
 
-	for (int i = 0; i < j; i++) {
+	for (uint i = 0; i < j; i++) {
 		if (a->dat[i] != b->dat[i]) {
 			return false;
 		}
@@ -108,14 +116,14 @@ MAT_API bool del(Matrix* a) {
 }
 
 MAT_API Matrix* sca(Matrix* a, double v) {
-	int j = a->size.height * a->size.width;
+	uint j = a->size.height * a->size.width;
 	double* newDat = new double[j];
 
-	for (int i = 0; i < j; i++) {
+	for (uint i = 0; i < j; i++) {
 		newDat[i] = a->dat[i] * v;
 	}
 
-	return generate(a->size, newDat);
+	return intGenerate(a->size, newDat);
 }
 
 MAT_API Size getSize(Matrix* a) {

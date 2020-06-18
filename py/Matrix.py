@@ -15,9 +15,13 @@ import ctypes
 import pathlib
 
 
+loc = "/Mat.dll"
+if __name__ == "CuMatrix":
+    loc = "/CuMat.dll"
+
 #Load lib
 path = str(pathlib.Path().absolute())
-clib = ctypes.CDLL(path + "/Matrix.dll")
+clib = ctypes.CDLL(path + loc)
 
 
 #TYPES

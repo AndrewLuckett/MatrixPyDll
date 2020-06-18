@@ -18,6 +18,8 @@ Header file to outline functions and types for dllmain.cpp
 extern "C" MAT_API Matrix * newMat(Size size, double value, bool random);
 extern "C" MAT_API Matrix * generate(Size size, double* a);
 
+Matrix* intGenerate(Size size, double* a);
+
 extern "C" MAT_API Matrix* mult(Matrix* a, Matrix* b);
 extern "C" MAT_API Matrix* add(Matrix* a, Matrix* b);
 extern "C" MAT_API Matrix* sub(Matrix* a, Matrix* b);
